@@ -10,7 +10,7 @@ A modern, fully-typed PHP library for building Asterisk AGI applications. This i
 ## Installation
 
 ```bash
-composer require yourname/phpagi
+composer require tico/phpagi
 ```
 
 ## Quick Start
