@@ -21,55 +21,48 @@
   * @example docs/fastagi.xinetd Example xinetd config file
   */
 
- /**
-  * Written for PHP 4.3.4, should work with older PHP 4.x versions.
-  * Please submit bug reports, patches, etc to https://github.com/welltime/phpagi
-  *
-  */
+  /**
+   * Modernized for PHP 8.1+
+   * Please submit bug reports, patches, etc to https://github.com/welltime/phpagi
+   *
+   */
 
-  require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'phpagi.php');
+  require_once(__DIR__ . DIRECTORY_SEPARATOR . 'phpagi.php');
 
   $fastagi = new AGI();
 
   $fastagi->verbose(print_r($fastagi, true));
 
-  if(!isset($fastagi->config['fastagi']['basedir']))
-    $fastagi->config['fastagi']['basedir'] = dirname(__FILE__);
+  $fastagi->config['fastagi']['basedir'] ??= __DIR__;
 
-  // perform some security checks
+  $script = $fastagi->config['fastagi']['basedir'] . DIRECTORY_SEPARATOR . ($fastagi->request['agi_network_script'] ?? '');
 
-  $script = $fastagi->config['fastagi']['basedir'] . DIRECTORY_SEPARATOR . $fastagi->request['agi_network_script'];
-
-  // in the same directory (or subdirectory)
   $mydir = dirname($fastagi->config['fastagi']['basedir']) . DIRECTORY_SEPARATOR;
   $dir = dirname($script) . DIRECTORY_SEPARATOR;
-  if(substr($dir, 0, strlen($mydir)) != $mydir)
+  if (!str_starts_with($dir, $mydir))
   {
     $fastagi->conlog("$script is not allowed to execute.");
     exit;
   }
 
-  // make sure it exists
-  if(!file_exists($script))
+  if (!file_exists($script))
   {
     $fastagi->conlog("$script does not exist.");
     exit;
   }
 
-  // drop privileges
-  if(isset($fastagi->config['fastagi']['setuid']) && $fastagi->config['fastagi']['setuid'])
+  if (isset($fastagi->config['fastagi']['setuid']) && $fastagi->config['fastagi']['setuid'])
   {
     $owner = fileowner($script);
     $group = filegroup($script);
-    if(!posix_setgid($group) || !posix_setegid($group) || !posix_setuid($owner) || !posix_seteuid($owner))
+    if (!posix_setgid($group) || !posix_setegid($group) || !posix_setuid($owner) || !posix_seteuid($owner))
     {
       $fastagi->conlog("failed to lower privileges.");
-      exit;      
+      exit;
     }
   }
 
-  // make sure script is still readable
-  if(!is_readable($script))
+  if (!is_readable($script))
   {
     $fastagi->conlog("$script is not readable.");
     exit;
