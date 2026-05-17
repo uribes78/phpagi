@@ -1,13 +1,23 @@
 {
-    "name": "welltime/phpagi",
-    "description": "PHPAGI is a PHP class for the Asterisk Gateway Interface.",
+    "name": "tico/phpagi",
+    "description": "PHP AGI client for Asterisk — modern PHP 8.x implementation",
     "type": "library",
     "license": "LGPL-2.1-or-later",
+    "homepage": "https://github.com/uribes78/phpagi",
+    "keywords": ["asterisk", "agi", "voip", "phpagi", "telephony"],
+    "authors": [
+        {
+            "name": "Saul Uribe",
+            "email": "s4ulu4@gmail.com",
+            "role": "Maintainer"
+        }
+    ],
     "autoload": {
-        "classmap": [
-            "src/phpagi.php",
-            "src/phpagi-asmanager.php"
-        ]
+        "psr-4": {
+            "Phpagi\\": "src/Phpagi/"
+        }
     },
-    "require": {}
+    "require": {
+        "php": ">=8.1"
+    }
 }
