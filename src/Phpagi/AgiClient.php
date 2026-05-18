@@ -7,11 +7,11 @@ use Phpagi\Exception\ConnectionException;
 
 final class AgiClient implements AgiInterface
 {
-    public const int AGIRES_OK = 200;
-    public const string DEFAULT_OPTION_DELIM = ',';
+    public const AGIRES_OK = 200;
+    public const DEFAULT_OPTION_DELIM = ',';
 
-    private const int MAX_READ_ATTEMPTS = 5;
-    private const int MONTH_SECONDS = 2592000;
+    private const MAX_READ_ATTEMPTS = 5;
+    private const MONTH_SECONDS = 2592000;
 
     private mixed $stdin;
     private mixed $stdout;
@@ -702,7 +702,11 @@ final class AgiClient implements AgiInterface
     private function loadConfig(): array
     {
         $paths = [
-            DEFAULT_PHPAGI_CONFIG,
+            defined('DEFAULT_PHPAGI_CONFIG')
+                ? DEFAULT_PHPAGI_CONFIG
+                : (defined('AST_CONFIG_DIR')
+                    ? rtrim(AST_CONFIG_DIR, '/') . '/phpagi.conf'
+                    : '/etc/asterisk/phpagi.conf'),
         ];
 
         foreach ($paths as $path) {
