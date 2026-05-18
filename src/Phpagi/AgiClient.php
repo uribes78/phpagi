@@ -276,7 +276,8 @@ final class AgiClient implements AgiInterface
         $last = new AgiResponse();
         foreach (explode("\n", str_replace("\r\n", "\n", $message)) as $line) {
             @syslog(LOG_WARNING, $line);
-            $last = $this->evaluate("VERBOSE \"{$line}\" {$level}");
+            $escapedLine = str_replace("\n", '\n', addslashes($line));
+            $last = $this->evaluate("VERBOSE \"{$escapedLine}\" {$level}");
         }
         return $last;
     }
@@ -726,7 +727,7 @@ final class AgiClient implements AgiInterface
         string $message,
         string $file,
         int $line,
-        array $context,
+        array $context = [],
     ): void {
         if (ini_get('error_reporting') === 0) {
             return;
