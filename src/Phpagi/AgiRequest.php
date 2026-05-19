@@ -4,11 +4,11 @@ namespace Phpagi;
 
 final readonly class AgiRequest
 {
-    private const array EXPECTED_KEYS = [
+    private const EXPECTED_KEYS = [
         'agi_request', 'agi_channel', 'agi_language', 'agi_type',
         'agi_uniqueid', 'agi_callerid', 'agi_dnid', 'agi_rdnis',
         'agi_context', 'agi_extension', 'agi_priority', 'agi_enhanced',
-        'agi_accountcode', 'agi_network', 'agi_network_script',
+        'agi_accountcode', 'agi_network', 'agi_network_script', 'agi_threadid',
     ];
 
     public string $request;
@@ -26,6 +26,7 @@ final readonly class AgiRequest
     public string $accountCode;
     public bool $network;
     public string $networkScript;
+    public string $threadid;
     public array $raw;
 
     public function __construct(array $variables)
@@ -46,6 +47,7 @@ final readonly class AgiRequest
         $this->accountCode = $variables['agi_accountcode'] ?? '';
         $this->network = ($variables['agi_network'] ?? '') === 'yes';
         $this->networkScript = $variables['agi_network_script'] ?? '';
+        $this->threadid = $variables['agi_threadid'] ?? '';
     }
 
     public static function fromStream($stream): self
